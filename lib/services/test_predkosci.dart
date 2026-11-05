@@ -96,6 +96,16 @@ class TestPredkosci {
   }
 
   void przerwij() => _przerwij = true;
+
+  /// Test prędkości tylko z sieci UltraTech (decyzja z 05.11.2026): serwer iperf3 na CCR2216 ma adres prywatny,
+  /// więc jeśli nie odpowiada żaden port, urządzenie jest poza siecią UT (np. LTE, Wi-Fi u znajomych).
+  /// Bez skonfigurowanego iperf3 (przeglądarka, wersja pokazowa) nie blokujemy.
+  Future<bool> wSieciUT() async {
+    final serwery = iperf;
+    if (serwery == null || serwery.isEmpty) return true;
+    final wyniki = await Future.wait(serwery.take(2).map((s) => s.osiagalny()));
+    return wyniki.contains(true);
+  }
   int _ms() => DateTime.now().difference(t0).inMilliseconds;
 
   /// [startObciazenia] jest wołane tuż przed fazą pobierania (po pomiarze w spoczynku):

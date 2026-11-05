@@ -94,6 +94,17 @@ powiadomień Google (Firebase). Jedyny link do Google to Sklep Play przy aktuali
 - Gdy `obciazenie/start` się nie uda (np. 429), zalogowany klient wysyła wynik do `POST /klient/obciazenie/zapis` (to samo body, bez werdyktu, błędy pomijane), żeby trafił do karty klienta w EYE.
 - ONU jest w teście tylko bierne (liczniki, pingi), nie jest końcem pomiaru; routery Wi-Fi też nie.
 
+## Test prędkości tylko w sieci UltraTech
+
+Przed testem aplikacja sprawdza, czy odpowiada serwer iperf3 na CCR2216 (adres prywatny). Jeśli nie odpowiada,
+urządzenie jest poza siecią UT (LTE, cudze Wi-Fi) i test się nie uruchamia; klient dostaje prośbę o połączenie z domowym Wi-Fi.
+Opcji „sieć komórkowa” nie ma. Wersja pokazowa i przeglądarka (bez iperf3) nie są blokowane.
+
+## Logo i ikony
+
+Logo rysowane wektorowo (`lib/widgets/logo_ut.dart`), bo logo-UT.png ze strony ma przezroczyste litery i 65 px.
+Ikony wszystkich platform: `python3 tool/logo_ut.py` (Pillow) z tej samej geometrii.
+
 ## iperf3 (tylko aplikacja: telefon i komputer)
 
 - Własny klient protokołu iperf3 w Darcie (`lib/services/iperf3.dart`), bez programu iperf3 na urządzeniu.

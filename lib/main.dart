@@ -9,6 +9,7 @@ import 'screens/test_ekran.dart';
 import 'screens/ustawienia_ekran.dart';
 import 'services/stan_aplikacji.dart';
 import 'widgets/aktualizacja.dart';
+import 'widgets/logo_ut.dart';
 import 'widgets/wspolne.dart';
 
 void main() {
@@ -111,9 +112,7 @@ class PowlokaState extends State<Powloka> {
       appBar: AppBar(
         title: zakladka == 0
             ? Row(children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.asset('assets/logo.png', height: 30, width: 30)),
+                const LogoUT(rozmiar: 32),
                 const SizedBox(width: 10),
                 const Text('UltraTech'),
               ])

@@ -189,6 +189,17 @@ class Iperf3 {
     }
   }
 
+  /// Czy serwer testu odpowiada (zwykłe połączenie TCP, bez pomiaru). Serwer jest osiągalny tylko z sieci UltraTech.
+  Future<bool> osiagalny({Duration limit = const Duration(seconds: 2)}) async {
+    try {
+      final s = await Socket.connect(host, port, timeout: limit);
+      s.destroy();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   static double _mediana(List<double> l) {
     final s = List.of(l)..sort();
     return s[s.length ~/ 2];

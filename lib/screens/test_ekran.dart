@@ -43,6 +43,7 @@ class _KartaTestuState extends State<KartaTestu> {
   String _polaczenie = naKomputerze ? 'kabel_router' : 'wifi';
   bool _wykryto = false;
   String? _blad;
+  bool _sprawdzamSiec = false;
   bool? _serwisyOk;
   bool _sprawdzamSerwisy = false;
   WynikTestu? _wynik;
@@ -62,7 +63,7 @@ class _KartaTestuState extends State<KartaTestu> {
     RodzajSieci.wykryj().then((p) {
       if (!mounted) return;
       setState(() {
-        if (p.rodzaj != 'nieznany' && p.zrodlo == 'system') {
+        if (p.rodzaj != 'nieznany' && p.rodzaj != 'komorkowe' && p.zrodlo == 'system') {
           _polaczenie = p.rodzaj;
           _wykryto = true;
         }
@@ -82,8 +83,24 @@ class _KartaTestuState extends State<KartaTestu> {
       rateMbps: siec.rateMbps,
       pasmo: siec.pasmo,
     );
+    final nowy = TestPredkosci();
     setState(() {
-      _test = TestPredkosci();
+      _blad = null;
+      _sprawdzamSiec = true;
+    });
+    final lokalnie = await nowy.wSieciUT();
+    if (!mounted) return;
+    if (!lokalnie) {
+      setState(() {
+        _sprawdzamSiec = false;
+        _blad = 'Test prędkości działa tylko w sieci UltraTech. Połącz to urządzenie z domowym Wi-Fi '
+            'albo kablem z routerem na łączu UltraTech i spróbuj ponownie.';
+      });
+      return;
+    }
+    setState(() {
+      _sprawdzamSiec = false;
+      _test = nowy;
       _ping = _pob = _wys = null;
       _serwisyOk = null;
       _blad = null;
@@ -193,7 +210,8 @@ class _KartaTestuState extends State<KartaTestu> {
   Widget build(BuildContext context) {
     final trwa = _test != null;
     final stan = StanScope.of(context);
-    final opcje = _opcje.entries.where((e) => naKomputerze ? e.key != 'komorkowe' : true).toList();
+    // Test działa tylko w sieci UltraTech, więc sieci komórkowej nie oferujemy.
+    final opcje = _opcje.entries.where((e) => e.key != 'komorkowe').toList();
     final o = _wynik?.opoznienie;
     return Karta(
       child: Column(
@@ -203,7 +221,7 @@ class _KartaTestuState extends State<KartaTestu> {
             naKomputerze
                 ? 'Mierzy prędkość między tym komputerem a serwerem w sieci UltraTech oraz to, czy połączenie wytrzymuje pełne obciążenie.'
                 : 'Mierzy prędkość między telefonem a serwerem w sieci UltraTech oraz to, czy połączenie wytrzymuje pełne obciążenie. '
-                      'Aby sprawdzić łącze domowe, połącz telefon z domowym Wi-Fi.',
+                      'Działa tylko w sieci UltraTech: połącz telefon z domowym Wi-Fi.',
           ),
           const SizedBox(height: 12),
           Text(
@@ -279,17 +297,9 @@ class _KartaTestuState extends State<KartaTestu> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(_blad!, style: const TextStyle(color: Color(0xFFB42318))),
             ),
-          if (_polaczenie == 'komorkowe')
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Text(
-                'Uwaga: przez sieć komórkową mierzysz łącze operatora komórkowego, nie internet UltraTech.',
-                style: TextStyle(color: Colors.black54, fontSize: 13),
-              ),
-            ),
           const SizedBox(height: 12),
           FilledButton.icon(
-            onPressed: trwa ? () => _test?.przerwij() : _start,
+            onPressed: trwa ? () => _test?.przerwij() : (_sprawdzamSiec ? null : _start),
             icon: Icon(trwa ? Icons.stop : Icons.play_arrow),
             label: Text(trwa ? 'Przerwij' : (_pob == null ? 'Rozpocznij test' : 'Powtórz test')),
           ),
