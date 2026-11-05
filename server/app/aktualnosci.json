@@ -1,0 +1,15 @@
+{
+  "_opis": "Zapasowe aktualności, gdy API komunikatów EYE nie odpowiada. Wgrać na https://ultratech.net.pl/app/aktualnosci.json. typ: awaria | prace_planowe | informacja | promocja; daty ISO 8601.",
+  "komunikaty": [
+    {
+      "id": "w1",
+      "typ": "promocja",
+      "tytul": "Mikołajowy Światłowód 2026",
+      "tresc": "Sprawdź aktualną promocję na stronie ultratech.net.pl.",
+      "priorytet": 1,
+      "przypiety": false,
+      "link": "https://ultratech.net.pl/",
+      "zaktualizowano": "2026-11-04T20:00:00+01:00"
+    }
+  ]
+}

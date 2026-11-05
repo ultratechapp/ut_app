@@ -1,0 +1,39 @@
+{
+  "_opis": "Manifest auto-aktualizacji. Wgrać na https://ultratech.net.pl/app/wersja.json. 'kod' = numer po + w pubspec.yaml (version: 1.0.0+1). 'min_kod' = najstarsza wersja, która jeszcze działa; starsze dostaną wymuszoną aktualizację. Sekcje windows/macos/linux: 'pobierz' = link do instalatora otwierany w przeglądarce. Linków do wersji na komputer nie pokazujemy jeszcze na stronie www.",
+  "android": {
+    "wersja": "1.0.0",
+    "kod": 1,
+    "min_kod": 1,
+    "apk": "https://ultratech.net.pl/app/ut_abonent-1.0.0.apk",
+    "sha256": "WPISAC_SUME_Z_PLIKU_.sha256",
+    "zmiany": "Pierwsza wersja aplikacji."
+  },
+  "ios": {
+    "wersja": "1.0.0",
+    "kod": 1,
+    "min_kod": 1,
+    "sklep": "https://apps.apple.com/pl/app/id0000000000",
+    "zmiany": "Pierwsza wersja aplikacji."
+  },
+  "windows": {
+    "wersja": "1.0.0",
+    "kod": 1,
+    "min_kod": 1,
+    "pobierz": "https://ultratech.net.pl/app/ut_abonent-1.0.0-windows.zip",
+    "zmiany": "Pierwsza wersja aplikacji."
+  },
+  "macos": {
+    "wersja": "1.0.0",
+    "kod": 1,
+    "min_kod": 1,
+    "pobierz": "https://ultratech.net.pl/app/UltraTech-1.0.0.dmg",
+    "zmiany": "Pierwsza wersja aplikacji."
+  },
+  "linux": {
+    "wersja": "1.0.0",
+    "kod": 1,
+    "min_kod": 1,
+    "pobierz": "https://ultratech.net.pl/app/UltraTech-1.0.0-x86_64.AppImage",
+    "zmiany": "Pierwsza wersja aplikacji."
+  }
+}

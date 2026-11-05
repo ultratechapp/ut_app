@@ -1,0 +1,111 @@
+# Buduje aplikację na Androida (APK), iPhone'a (bez podpisu) i panel web.
+# Uruchamia się przy każdym wypchnięciu oraz ręcznie (Actions → Build → Run workflow).
+name: Build
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: 'Tryb pokazowy (true/false)'
+        default: 'true'
+
+env:
+  FLUTTER_VERSION: '3.47.9'
+  DEMO: ${{ github.event.inputs.demo || 'true' }}
+  # iperf3 na CCR2216 (tylko aplikacja, nie panel web). Hasło i klucz publiczny (base64 bez nagłówków PEM)
+  # w sekretach repozytorium IPERF_PASS i IPERF_PUBKEY; bez nich aplikacja mierzy przez HTTP.
+  IPERF_ARGS: >-
+    --dart-define=IPERF_HOST=192.168.253.1 --dart-define=IPERF_PORTY=5201-5204 --dart-define=IPERF_USER=ut
+    --dart-define=IPERF_PASS=${{ secrets.IPERF_PASS }} --dart-define=IPERF_PUBKEY=${{ secrets.IPERF_PUBKEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      # Klucz podpisu z sekretów repozytorium (ANDROID_KEYSTORE_BASE64, ANDROID_KEY_PROPERTIES).
+      - name: Klucz podpisu
+        if: ${{ env.KS != '' }}
+        env: { KS: '${{ secrets.ANDROID_KEYSTORE_BASE64 }}', KP: '${{ secrets.ANDROID_KEY_PROPERTIES }}' }
+        run: |
+          echo "$KS" | base64 -d > android/app/ut-release.jks
+          echo "$KP" > android/key.properties
+      - run: flutter build apk --release --dart-define=DEMO=${{ env.DEMO }} ${{ env.IPERF_ARGS }}
+      - run: sha256sum build/app/outputs/flutter-apk/app-release.apk | tee build/app/outputs/flutter-apk/app-release.apk.sha256
+      - uses: actions/upload-artifact@v4
+        with: { name: android-apk, path: build/app/outputs/flutter-apk/app-release.apk* }
+
+  ios:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      # Bez podpisu: sprawdza, że aplikacja się kompiluje. Do App Store potrzebne konto Apple Developer.
+      - run: flutter build ios --release --no-codesign --dart-define=DEMO=${{ env.DEMO }} ${{ env.IPERF_ARGS }}
+
+  web:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      - run: flutter build web --release --no-web-resources-cdn --base-href /panel/ --dart-define=DEMO=${{ env.DEMO }} --dart-define=API_URL=/api/v1 --dart-define=APP_FILES_URL=/app
+      - uses: actions/upload-artifact@v4
+        with: { name: panel-web, path: build/web }
+
+  # Wersje na komputer. Linków do nich nie ma jeszcze na stronie www.
+  linux:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libsecret-1-dev ninja-build
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      - run: flutter build linux --release --dart-define=DEMO=${{ env.DEMO }} ${{ env.IPERF_ARGS }}
+      - run: tar -czf UltraTech-linux-x64.tar.gz -C build/linux/x64/release bundle
+      - uses: actions/upload-artifact@v4
+        with: { name: linux, path: UltraTech-linux-x64.tar.gz }
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      - run: flutter build windows --release --dart-define=DEMO=${{ env.DEMO }} ${{ env.IPERF_ARGS }}
+      - run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath UltraTech-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with: { name: windows, path: UltraTech-windows-x64.zip }
+
+  macos:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '${{ env.FLUTTER_VERSION }}', channel: stable, cache: true }
+      # Bez podpisu i notaryzacji Apple: do prób. Do dystrybucji potrzebne konto Apple Developer.
+      - run: flutter build macos --release --dart-define=DEMO=${{ env.DEMO }} ${{ env.IPERF_ARGS }}
+      - run: ditto -c -k --keepParent build/macos/Build/Products/Release/UltraTech.app UltraTech-macos.zip
+      - uses: actions/upload-artifact@v4
+        with: { name: macos, path: UltraTech-macos.zip }
