@@ -1,5 +1,6 @@
 # Buduje aplikację na Androida (APK), iPhone'a (bez podpisu) i panel web.
 # Uruchamia się przy każdym wypchnięciu oraz ręcznie (Actions → Build → Run workflow).
+# iPhone i Mac budują się tylko przy uruchomieniu ręcznym.
 name: Build
 on:
   push:
@@ -52,6 +53,8 @@ jobs:
 
   ios:
     needs: test
+    # Mac jest płatny (minuty x10): tylko przy ręcznym uruchomieniu (Actions → Build → Run workflow).
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -99,6 +102,8 @@ jobs:
 
   macos:
     needs: test
+    # Mac jest płatny (minuty x10): tylko przy ręcznym uruchomieniu (Actions → Build → Run workflow).
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
