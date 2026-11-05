@@ -1,8 +1,16 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Klucz podpisu: android/key.properties (NIE wrzucać do repozytorium), opis w README.md.
+val kp = Properties()
+val kpPlik = rootProject.file("key.properties")
+if (kpPlik.exists()) kp.load(FileInputStream(kpPlik))
 
 android {
     namespace = "pl.net.ultratech.ut_abonent"
@@ -29,10 +37,6 @@ android {
         versionName = flutter.versionName
     }
 
-    // Klucz podpisu: android/key.properties (NIE wrzucać do repozytorium), opis w README.md.
-    val kp = java.util.Properties()
-    val kpPlik = rootProject.file("key.properties")
-    if (kpPlik.exists()) kp.load(java.io.FileInputStream(kpPlik))
     signingConfigs {
         if (kpPlik.exists()) {
             create("release") {
