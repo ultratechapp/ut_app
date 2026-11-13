@@ -125,8 +125,14 @@ L = rep(L, 'font-weight: 700; color: #1F7A4D;">bez zmian</td>', 'font-weight: 70
 L = rep(L, 'font-weight: 700; color: #1F7A4D;">pełna prędkość pakietu</td>', 'font-weight: 700; color: #1F7A4D;">bez wieczornych spadków typowych dla radia</td>', label='C6b')
 
 # pkt 3: miejsce na opinie (bez treści zastępczych)
-L = rep(L, '  <section id="zasieg"', '''  <!--ut:opinie MIEJSCE NA OPINIE KLIENTÓW I LICZBY (audyt pkt 3): wstawić tylko prawdziwe opinie ze źródłem (np. Google)
-       oraz liczby, które firma potrafi wykazać (lata działania, liczba podłączonych domów, ocena Google). Do uzupełnienia przez właściciela.-->
+L = rep(L, '  <section id="zasieg"', '''  <!--ut:liczby--><section aria-label="UltraTech w liczbach" style="background: #FFFFFF; border-top: 1px solid #E3E8EF;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 40px 16px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; text-align: center;">
+      <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ponad 4 000</div><div style="margin-top: 6px; font-size: 16px; font-weight: 600; color: #0B2545;">przyłączy w naszej sieci</div></div>
+      <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ponad 10 000</div><div style="margin-top: 6px; font-size: 16px; font-weight: 600; color: #0B2545;">domów i lokali w zasięgu</div></div>
+      <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">57</div><div style="margin-top: 6px; font-size: 16px; font-weight: 600; color: #0B2545;">miejscowości w powiecie przemyskim</div></div>
+    </div>
+  </section><!--/ut:liczby-->
+  <!--ut:opinie MIEJSCE NA OPINIE KLIENTÓW (audyt pkt 3): wstawić tylko prawdziwe opinie ze źródłem (np. Google) i ocenę Google. Do uzupełnienia przez właściciela.-->
   <section id="zasieg"''', label='pkt3')
 
 # pkt 9: mapa zasięgu A nad listą miejscowości (linki do podstron zostają)
