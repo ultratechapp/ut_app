@@ -170,9 +170,10 @@ LICZBY = '''<!--ut:liczby2--><section aria-label="UltraTech w liczbach" style="b
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">4 370</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">przyłączonych adresów</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">10 382</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">lokale w zasięgu sieci</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">57</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">miejscowości w powiecie przemyskim</div></div>
-        <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ok. 405 km</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">własnego światłowodu</div><div style="margin-top: 2px; font-size: 13px; color: #6B4E2E;">268 km na słupach, 126 km w ziemi, 11 km zmodernizowanych</div></div>
+        <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ok. 405 km</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">własnego światłowodu</div></div>
       </div>
-      <p style="margin: 18px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: #7C2D12;">Serwerownia i baza techniczna w Przemyślu · <span style="font-weight: 500; color: #6B4E2E;">stan na listopad 2026</span></p>
+      <p style="margin: 18px auto 0; max-width: 760px; text-align: center; font-size: 16px; line-height: 1.5; color: #1B1F24;">Zbudowaliśmy 405 km sieci: 268 km po słupach, 126 km w ziemi i 11 km zmodernizowanej. Serwisujemy ją sami, z Przemyśla.</p>
+      <p style="margin: 8px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: #7C2D12;">Serwerownia i baza techniczna w Przemyślu · <span style="font-weight: 500; color: #6B4E2E;">stan na listopad 2026</span></p>
     </div>
   </section><!--/ut:liczby2-->
 '''
@@ -261,6 +262,8 @@ s = s[:k] + blk2 + s[e:]
 
 # --- mapa na telefonie: male podpisy schowane, glowne wieksze; podpowiedz
 s = rep(s, '<!--ut:mapa-A-v1--><div class="mapa-zasiegu">', '<!--ut:mapa-A-v1--><div class="mapa-zasiegu"><p class="fine-m" style="margin: 0 0 8px; text-align: center; font-size: 14px; color: #D5DEEA;">Na mapie główne miejscowości. Pełna lista z linkami jest pod mapą.</p>')
+
+s = rep(s, '<!--ut:mapa-A-v1--><div class="mapa-zasiegu">', '<p style="margin: 0 auto 20px; text-align: center; font-size: 18px; font-weight: 700;"><span style="color: #F7A04B;">10 382 lokale w zasięgu</span> · <a href="#formularz" style="color: #FFFFFF;">sprawdź swój adres</a></p>\n      <!--ut:mapa-A-v1--><div class="mapa-zasiegu">')
 
 # --- koniec strony: wezwanie do dzialania zamiast "awarii"; link dla klientow mniejszy; usuniecie ukrytej sekcji aplikacji
 CTA = '''<!--ut:cta-koniec--><section style="background: #FFF4E2;">
@@ -378,6 +381,8 @@ for fn in sorted(os.listdir(os.path.join(SRC, 'network'))):
     s = rep(s, '<div style="align-self: flex-start; background: #1F7A4D;', '<div class="lp-tag" style="align-self: flex-start; background: #1F7A4D;')
     s = rep_re(s, r'(\S+) budujemy własną sieć: kabel wchodzi do domu, bez anteny na dachu i bez zależności od pogody\.',
                lambda m: f'{m.group(1)} mamy własną sieć światłowodową: kabel wchodzi do domu, bez anteny na dachu i bez zależności od pogody. Wpisz adres w formularzu, a sprawdzimy, czy przyłącze jest już przy Twoim domu.')
+    s = rep_re(s, r'(<h2 style="margin: 0 0 14px; font-size: 32px; font-weight: 800; color: #0B2545;">Światłowód [^<]+</h2>\n)',
+               lambda m: m.group(1) + f'      <p style="margin: 0 0 14px; font-size: 17px; line-height: 1.5; font-weight: 700; color: #C2410C;">{nazwa} to część naszej sieci: 405 km światłowodu w powiecie przemyskim.</p>\n')
     # podpowiedz adresu
     if plik != 'Przemysl':
         s = rep(s, 'placeholder="np. ul. Przemyska 10"', f'placeholder="np. {nazwa} 25"')
