@@ -80,6 +80,7 @@ background-size:320px 220px;animation:ut-snieg 14s linear infinite}
 L = rep(L, '.modal{display:none;', SNOW_CSS + '.modal{display:none;', label='css')
 
 pano = open(pano_f, encoding='utf-8').read().strip()
+pano = rep(pano, '<div class="ut-pano-cap">Jedna sieć w pierścieniu: Przemyśl i 56 miejscowości powiatu</div>\n', '', label='pano-cap')
 L = rep(L, """<a href="dok/Regulamin_promocji_Mikolajowy_Swiatlowod_2026.pdf" style="color: #FFFFFF;">Regulamin promocji</a></p>
     </div>
   </section>""", """<a href="dok/Regulamin_promocji_Mikolajowy_Swiatlowod_2026.pdf" style="color: #FFFFFF;">Regulamin promocji</a></p>
