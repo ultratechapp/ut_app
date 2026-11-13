@@ -197,7 +197,7 @@ background-size:320px 220px;animation:ut-snieg 14s linear infinite}
 @keyframes ut-pano-move{to{transform:translate3d(calc(-1*var(--dist)),0,0)}}
 .ut-pano-cap{position:absolute;left:0;right:0;top:10px;text-align:left;font-weight:800;font-size:15px;pointer-events:none;padding:0 16px}
 @media (max-width:640px){.ut-pano{--ph:240px}.ut-pano-cap{font-size:12px;top:6px}}
-@media (prefers-reduced-motion:reduce){.ut-pano{overflow-x:auto}.ut-pano.is-loop .ut-pano-track{animation:none}}
+@media (prefers-reduced-motion:reduce){.ut-pano.is-loop .ut-pano-track{animation:none}}
 </style>
 <div class="ut-pano" style="background:linear-gradient(#0B2545,#12315C 55%,#1F4A85);color:#FFFFFF" aria-label="Panorama 57 miejscowości z siecią światłowodową UltraTech">
 <div class="ut-pano-track">
@@ -2197,11 +2197,21 @@ background-size:320px 220px;animation:ut-snieg 14s linear infinite}
 </div></div>
 <script>(function(){var ps=document.querySelectorAll('.ut-pano:not(.is-ready)');
 var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
-Array.prototype.forEach.call(ps,function(p){p.classList.add('is-ready');if(rm)return;var t=p.querySelector('.ut-pano-track');
+Array.prototype.forEach.call(ps,function(p){p.classList.add('is-ready');var t=p.querySelector('.ut-pano-track');if(!t)return;
 var n=t.children.length,i;for(i=0;i<n;i++){var c=t.children[i].cloneNode(true);c.setAttribute('aria-hidden','true');t.appendChild(c);}
-function set(){var d=t.scrollWidth/2;p.style.setProperty('--dist',d+'px');p.style.setProperty('--dur',(d/38)+'s');}
-set();window.addEventListener('resize',set);p.classList.add('is-loop');
-p.addEventListener('click',function(){p.classList.toggle('is-paused');});});})();</script>
+p.style.overflow='hidden';p.style.touchAction='pan-y';p.style.cursor='grab';p.style.userSelect='none';p.style.webkitUserSelect='none';
+var half=1,x=0,v=38,drag=false,sx=0,x0=0,last=0,moved=false,stop=false;
+function size(){half=t.scrollWidth/2||1;}size();window.addEventListener('resize',size);window.addEventListener('load',size);
+function draw(){x=((x%half)+half)%half;t.style.transform='translate3d('+(-x)+'px,0,0)';}
+function frame(now){var dt=last?Math.min(now-last,100)/1000:0;last=now;if(!drag&&!stop&&!rm)x+=v*dt;draw();requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+p.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;sx=e.clientX;x0=x;p.style.cursor='grabbing';try{p.setPointerCapture(e.pointerId);}catch(_){}});
+p.addEventListener('pointermove',function(e){if(!drag)return;var d=e.clientX-sx;if(Math.abs(d)>3)moved=true;x=x0-d;draw();});
+function up(){drag=false;p.style.cursor='grab';}
+p.addEventListener('pointerup',up);p.addEventListener('pointercancel',up);p.addEventListener('lostpointercapture',up);
+p.addEventListener('dragstart',function(e){e.preventDefault();});
+p.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();return;}stop=!stop;},true);
+});})();</script>
     <!--/ut:panorama-wieczor-v3-->
   </section>
 

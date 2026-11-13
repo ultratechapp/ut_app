@@ -430,3 +430,27 @@ for fn in sorted(os.listdir(os.path.join(SRC, 'network'))):
     open(os.path.join(DST, 'network', fn), 'w', encoding='utf-8').write(s)
     zm += 1
 print('index + podstron:', zm)
+
+# ---------------------------------------------------------------- panorama: przeciaganie palcem i mysza, bez pauzy po najechaniu
+PANO_JS = r'''<script>(function(){var ps=document.querySelectorAll('.ut-pano:not(.is-ready)');
+var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+Array.prototype.forEach.call(ps,function(p){p.classList.add('is-ready');var t=p.querySelector('.ut-pano-track');if(!t)return;
+var n=t.children.length,i;for(i=0;i<n;i++){var c=t.children[i].cloneNode(true);c.setAttribute('aria-hidden','true');t.appendChild(c);}
+p.style.overflow='hidden';p.style.touchAction='pan-y';p.style.cursor='grab';p.style.userSelect='none';p.style.webkitUserSelect='none';
+var half=1,x=0,v=38,drag=false,sx=0,x0=0,last=0,moved=false,stop=false;
+function size(){half=t.scrollWidth/2||1;}size();window.addEventListener('resize',size);window.addEventListener('load',size);
+function draw(){x=((x%half)+half)%half;t.style.transform='translate3d('+(-x)+'px,0,0)';}
+function frame(now){var dt=last?Math.min(now-last,100)/1000:0;last=now;if(!drag&&!stop&&!rm)x+=v*dt;draw();requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+p.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;moved=false;sx=e.clientX;x0=x;p.style.cursor='grabbing';try{p.setPointerCapture(e.pointerId);}catch(_){}});
+p.addEventListener('pointermove',function(e){if(!drag)return;var d=e.clientX-sx;if(Math.abs(d)>3)moved=true;x=x0-d;draw();});
+function up(){drag=false;p.style.cursor='grab';}
+p.addEventListener('pointerup',up);p.addEventListener('pointercancel',up);p.addEventListener('lostpointercapture',up);
+p.addEventListener('dragstart',function(e){e.preventDefault();});
+p.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();return;}stop=!stop;},true);
+});})();</script>'''
+s = open(os.path.join(DST, 'index.html'), encoding='utf-8').read()
+s = rep_re(s, r"<script>\(function\(\)\{var ps=document\.querySelectorAll\('\.ut-pano:not\(\.is-ready\)'\);.*?</script>", lambda m: PANO_JS)
+s = rep(s, '@media (prefers-reduced-motion:reduce){.ut-pano{overflow-x:auto}.ut-pano.is-loop .ut-pano-track{animation:none}}', '@media (prefers-reduced-motion:reduce){.ut-pano.is-loop .ut-pano-track{animation:none}}')
+open(os.path.join(DST, 'index.html'), 'w', encoding='utf-8').write(s)
+print('panorama: przeciaganie OK')
