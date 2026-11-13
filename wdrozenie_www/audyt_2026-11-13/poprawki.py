@@ -134,6 +134,10 @@ L = rep(L, 'Wybierz swoją, żeby zobaczyć ofertę i zasięg.</p>\n',
         'Wybierz swoją na mapie albo z listy, żeby zobaczyć ofertę i zasięg.</p>\n      <!--ut:mapa-A-v1--><div class="mapa-zasiegu">' + mapa.strip() +
         '</div><!--/ut:mapa-A-v1-->\n', label='pkt9')
 
+# pkt 9: zdjęcie routera (od użytkownika, logo producenta zastąpione logo UT)
+L = rep_re(L, r'<!-- TODO zdjęcie routera od UT -->\s*<div style="flex: 0 0 auto;"><svg width="72" height="72".*?</svg></div>',
+  '<div style="flex: 0 1 260px; min-width: 0;"><img src="assets/router_ut.jpg" width="260" height="260" loading="lazy" alt="Router Wi-Fi 6 w cenie abonamentu" style="display: block; width: 100%; max-width: 260px; height: auto; border-radius: 12px; margin: 0 auto;"></div>', label='router-img')
+
 # pkt 11: ukrycie sekcji aplikacji do czasu wersji ze sklepu
 L = rep(L, '<section id="aplikacja" style="', '<section id="aplikacja" hidden style="display: none; ', label='pkt11')
 
