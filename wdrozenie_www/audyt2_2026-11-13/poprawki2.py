@@ -36,7 +36,7 @@ WARM = [
     ('#9AA6B5', '#6B7280'),   # ramka pol formularza: kontrast 4,8:1 zamiast 2,5:1
 ]
 PROMO_STYLE = 'background: #0B2545; color: #F2C14E; border-bottom: 1px solid #16335C;'
-LICZBY_LINIA = '4 370 przyłączonych adresów · 10 382 lokale w zasięgu · 57 miejscowości (stan na listopad 2026)'
+LICZBY_LINIA = '4 370 przyłączonych adresów · 10 382 lokale w zasięgu · 57 miejscowości · ok. 405 km światłowodu (stan na listopad 2026)'
 COUNTDOWN_JS = '''<script>
 (function(){try{var el=document.getElementById('odliczanie');if(!el)return;
 var n=new Date(),st=new Date(2026,10,16),en=new Date(2026,11,15,23,59,59);
@@ -166,10 +166,11 @@ s = rep(s, '.cmp td:nth-child(3){order:-1;font-size:18px}\n.cmp td:nth-child(3):
 # --- liczby: wyzej (zaraz pod paskiem zalet), kremowe tlo, dokladne dane
 LICZBY = '''<!--ut:liczby2--><section aria-label="UltraTech w liczbach" style="background: #FFF4E2; border-bottom: 1px solid #F3DDBD;">
     <div style="max-width: 1100px; margin: 0 auto; padding: 32px 16px 26px; box-sizing: border-box;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px 24px; text-align: center;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px 24px; text-align: center;">
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">4 370</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">przyłączonych adresów</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">10 382</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">lokale w zasięgu sieci</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">57</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">miejscowości w powiecie przemyskim</div></div>
+        <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ok. 405 km</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">własnego kabla światłowodowego</div><div style="margin-top: 2px; font-size: 13px; color: #6B4E2E;">268 km na słupach, 126 km w ziemi, 11 km odtworzonych na słupach</div></div>
       </div>
       <p style="margin: 18px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: #7C2D12;">Serwerownia i baza techniczna w Przemyślu · <span style="font-weight: 500; color: #6B4E2E;">stan na listopad 2026</span></p>
     </div>
@@ -409,7 +410,7 @@ for fn in sorted(os.listdir(os.path.join(SRC, 'network'))):
   <!--ut:lp-mapa--><section style="background: #0B2545; color: #FFFFFF;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 48px 16px 24px; box-sizing: border-box;">
       <h2 style="margin: 0 0 8px; font-size: 32px; font-weight: 800; text-align: center;">Sieć UltraTech {loc} i okolicy</h2>
-      <p style="margin: 0 auto 24px; max-width: 720px; text-align: center; font-size: 16px; line-height: 1.5; color: #D5DEEA;">Własny światłowód z serwerowni w Przemyślu do 57 miejscowości powiatu. Kliknij miejscowość na mapie, żeby zobaczyć jej stronę.</p>
+      <p style="margin: 0 auto 24px; max-width: 720px; text-align: center; font-size: 16px; line-height: 1.5; color: #D5DEEA;">Własny światłowód z serwerowni w Przemyślu do 57 miejscowości powiatu, razem ok. 405 km kabla. Kliknij miejscowość na mapie, żeby zobaczyć jej stronę.</p>
       <div class="lp-mapa" style="max-width: 900px; margin: 0 auto;">{mapa_wycinek(plik, s)}</div>
     </div>
     <div class="lp-pano" aria-label="Panorama: {nazwa} i sąsiednie miejscowości"><div class="lp-pano-track">
