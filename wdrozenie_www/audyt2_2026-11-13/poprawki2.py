@@ -84,7 +84,7 @@ assert len(PUNKTY) == 55, len(PUNKTY)  # Starzawa i Ciemierzowice nie maja punkt
 s = common(idx, '')
 
 # --- head: tytul, opis, podglad, dane firmy
-OPIS = 'Internet światłowodowy w Przemyślu i powiecie przemyskim: od 15,99 zł/mies. przez 3 mies., router Wi-Fi 6 w cenie, lokalny technik. Sprawdź swój adres.'
+OPIS = 'Internet światłowodowy w Przemyślu i powiecie przemyskim: 405 km własnej sieci, od 15,99 zł/mies. przez 3 mies., router Wi-Fi 6 w cenie. Sprawdź adres.'
 assert len(OPIS) <= 155, len(OPIS)
 URL = 'https://ultratech.net.pl/przyklad-mikolaj/'
 ld = {
@@ -170,7 +170,7 @@ LICZBY = '''<!--ut:liczby2--><section aria-label="UltraTech w liczbach" style="b
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">4 370</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">przyłączonych adresów</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">10 382</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">lokale w zasięgu sieci</div></div>
         <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">57</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">miejscowości w powiecie przemyskim</div></div>
-        <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ok. 405 km</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">własnego kabla światłowodowego</div><div style="margin-top: 2px; font-size: 13px; color: #6B4E2E;">268 km na słupach, 126 km w ziemi, 11 km odtworzonych na słupach</div></div>
+        <div><div style="font-size: 44px; line-height: 1.1; font-weight: 800; color: #C2410C;">ok. 405 km</div><div style="margin-top: 4px; font-size: 16px; font-weight: 700; color: #0B2545;">własnego światłowodu</div><div style="margin-top: 2px; font-size: 13px; color: #6B4E2E;">268 km na słupach, 126 km w ziemi, 11 km zmodernizowanych</div></div>
       </div>
       <p style="margin: 18px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: #7C2D12;">Serwerownia i baza techniczna w Przemyślu · <span style="font-weight: 500; color: #6B4E2E;">stan na listopad 2026</span></p>
     </div>
@@ -369,6 +369,7 @@ for fn in sorted(os.listdir(os.path.join(SRC, 'network'))):
     s = common(s, '../')
     s = rep(s, '</style>\n<script type="application/ld+json">', LP_CSS + '</style>\n<script type="application/ld+json">')
     s = s.replace('Router Wi-Fi w cenie', 'Router Wi-Fi 6 w cenie').replace('router Wi-Fi w cenie', 'router Wi-Fi 6 w cenie')
+    s = rep_re(s, r'(<meta name="description" content="[^"]*)lokalny technik, 0 zł za utrzymanie linii\.', lambda m: m.group(1) + '405 km własnej sieci, lokalny technik.')
     # pasek promocji z odliczaniem, granat ze zlotem
     s = rep_re(s, r'<div style="background: #B3122B; color: #FFFFFF;([^"]*)">\s*(Mikołajki [^:]+): światłowód 15,99 zł przez 3 mies\., przyłączenie od 1 zł, do 15\.12\s*</div>',
                lambda m: f'<div style="{PROMO_STYLE}{m.group(1)}">\n    {m.group(2)}: światłowód 15,99 zł przez 3 mies., przyłączenie od 1 zł<span id="odliczanie"></span>\n  </div>')
